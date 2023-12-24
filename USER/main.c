@@ -26,6 +26,7 @@ KEY1降低采样频率
 #include <stdio.h>
 #include <stdarg.h>
 #include "IC.h"
+#include "ui.h"
 
 #define NPT 1024 //采样次数
 #define PI2 6.28318530717959
@@ -62,12 +63,7 @@ u16 temp=0;//幅值最大的频率成分
 u16 t=0;
 u16 key;//按键值
 
-int main()
-{
-	u16 i;
-//	AD0 = AD_GetValue(ADC_Channel_8);
-//	AD1 = AD_GetValue(ADC_Channel_9);
-	
+void init(void){
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	MYDMA1_Config(DMA1_Channel1,(u32)&ADC1->DR,(u32)&currentadc,1);
 	uart_init(9600);
@@ -82,7 +78,16 @@ int main()
 	TIM2_PWM_Init(T-1,pre-1);	//最大频率72000000/1/2000=3.6KHz
 	Dac1_Init();
 	LCD_Clear(BLACK);
-	window();
+	//	AD0 = AD_GetValue(ADC_Channel_8);
+	//	AD1 = AD_GetValue(ADC_Channel_9);
+}
+
+int main()
+{
+	u16 i;
+	init();
+	DrawUI();
+
 	while(1)
 	{
 		//等待采样完成
@@ -186,7 +191,7 @@ void window(void)
 	static u16 h; 
 	
 	POINT_COLOR=GREEN;	  
-	LCD_ShowString(5,8,200,24,24,"NEFU");
+	LCD_ShowString(5,8,200,24,24,"UPON");
 	
 	POINT_COLOR=GRAY;
 	LCD_ShowString(190,13,200,16,16,"mV/div");	
@@ -205,7 +210,7 @@ void window(void)
 	LCD_ShowString(60,13,200,16,16,"IN:PA6,PB13");
 	 
 	POINT_COLOR=BLUE;
-	LCD_ShowNum(150,13,V,4,16);//mv/div
+	//LCD_ShowNum(150,13,V,4,16);//mv/div
 	
 	POINT_COLOR=WHITE;			
 	lcd_huaxian(0,0,0,200);
