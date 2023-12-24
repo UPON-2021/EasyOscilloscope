@@ -28,13 +28,12 @@ KEY1降低采样频率
 #include "IC.h"
 #include "ui.h"
 
-#define NPT 1024 //采样次数
-#define PI2 6.28318530717959
+#include "const.h"
 
 void lcd_huadian(u16 a,u16 b,u16 color);//画点函数
 void lcd_huaxian(u16 x1,u16 y1,u16 x2,u16 y2);//画线函数
 void window(void);//主界面
-void clear_point(u16 mode);//更新显示屏当前列
+//void clear_point(u16 mode);//更新显示屏当前列
 void InitBufInArray(void);//正弦波输出缓存
 void sinout(void);//正弦波输出
 void GetPowerMag(void);//FFT变换，输出频率
@@ -44,7 +43,7 @@ int long fftout[NPT];//FFT输出
 u32 FFT_Mag[NPT/2]={0};//幅频特性
 u16 magout[NPT];//模拟正弦波输出缓存区
 
-u16 table[15] ={16,32,48,64,80,96,112,128,144,160,176,192,208,224,240};//标点横坐标
+//u16 table[15] ={16,32,48,64,80,96,112,128,144,160,176,192,208,224,240};//标点横坐标
 u32 currentadc;//实时采样数据
 u32 adcx[NPT];//adc数值缓存
 u32 adcmax;//采样最大值和最小值
@@ -58,7 +57,8 @@ u32 fre;//采样频率 kHz
 u16 F;//波形频率
 uint16_t AD0, AD1;
 
-int V=660;//纵坐标单位刻度 mv/div
+int uint_voltage = 660; //纵坐标单位刻度 mv/div
+// int V=660;
 u16 temp=0;//幅值最大的频率成分
 u16 t=0;
 u16 key;//按键值
@@ -130,7 +130,9 @@ int main()
 	
 		if(show_flag==1)
 		{
-			clear_point(1);    //更新显示屏当前列，采用连线绘制
+			UpdateInformation(pre,uint_voltage);
+			UpdateWindow(1,adcx);
+			//clear_point(1);    //更新显示屏当前列，采用连线绘制
 		}	
 		
 		LED0=!LED0;
@@ -154,195 +156,17 @@ int main()
 			}
 			
 			if (strcmp(Serial_RxPacket, "V+") == 0)
-			{V=V+10;
-			if(V>1000){V=660;}
+			{uint_voltage=uint_voltage+10;
+			if(uint_voltage>1000){uint_voltage=660;}
 			}
 			if (strcmp(Serial_RxPacket, "V-") == 0)
-			{V=V-10;
-			if(V<0){V=660;}
+			{uint_voltage=uint_voltage-10;
+			if(uint_voltage<0){uint_voltage=660;}
 			}
 		Serial_RxFlag = 0;
 		}
 	}
 }
-
-/**********************************************************
-简介：画点函数，反转Y坐标
-***********************************************************/
-void lcd_huadian(u16 a,u16 b,u16 color)
-{							    
-	LCD_Fast_DrawPoint(a,240-b,color);
-}
-
-/**********************************************************
-简介：画线函数，反转Y坐标
-***********************************************************/
-void lcd_huaxian(u16 x1,u16 y1,u16 x2,u16 y2)
-{
-	LCD_DrawLine(x1,240-y1,x2,240-y2);
-}
-
-/**********************************************************
-简介：主界面绘制
-***********************************************************/
-void window(void)
-{
-	u16 x,i;
-	static u16 h; 
-	
-	POINT_COLOR=GREEN;	  
-	LCD_ShowString(5,8,200,24,24,"UPON");
-	
-	POINT_COLOR=GRAY;
-	LCD_ShowString(190,13,200,16,16,"mV/div");	
-	LCD_ShowString(260,5,200,16,16,"max(mv):");
-	LCD_ShowString(260,45,200,16,16,"min(mv):");
-	LCD_ShowString(260,85,200,16,16,"vpp(mv):");
-	LCD_ShowString(260,165,200,16,16,"f(Hz):");
-	LCD_ShowString(260,200,200,16,16,"OSR:");  //采样率	
-	LCD_ShowString(304,220,200,16,16,"Hz");
-	LCD_ShowString(350,5,200,16,16,"f(Hz):");
-	LCD_ShowString(350,45,200,16,16,"DUTY(%):");
-//	LCD_ShowString(350,85,200,16,16,"AD0:");
-//	LCD_ShowString(350,128,200,16,16,"AD1:");	
-	
-	POINT_COLOR=BRRED;
-	LCD_ShowString(60,13,200,16,16,"IN:PA6,PB13");
-	 
-	POINT_COLOR=BLUE;
-	//LCD_ShowNum(150,13,V,4,16);//mv/div
-	
-	POINT_COLOR=WHITE;			
-	lcd_huaxian(0,0,0,200);
-	lcd_huaxian(256,0,256,200);
-	lcd_huaxian(0,0,256,0);		
-	lcd_huaxian(0,200,256,200);
-	
-	for(x=0;x<256;x++)
-	{
-		lcd_huadian(x,100,WHITE);
-		if(x == table[h])	
-		{
-			lcd_huaxian(x,1,x,3);
-			lcd_huaxian(x,101,x,103);
-			lcd_huaxian(x,199,x,197);
-			h++;
-			if(h>=16) h=0;
-		}	
-		if(x==128) 
-		{
-			lcd_huaxian(x,1,x,199);
-			for(i=10;i<200;i+=10)
-			{
-				lcd_huaxian(125,i,127,i);
-			}
-		}
-	}
-	
-	POINT_COLOR=MAGENTA;	
-	LCD_ShowString(260,128,200,16,16,"ing...");
-}
-
-/******************************************************************
-函数名称:clear_point()
-函数功能:循环更新波形
-参数说明:mode 波形模式选择 1——连线模式，0——打点模式
-备    注:波形的显示可采用打点方式和绘制线方式
-*******************************************************************/
-void clear_point(u16 mode)
-{
-	u16 x,i,past_vol,pre_vol;
-	static u16 h; 
-	
-	POINT_COLOR=BLUE;
-	fre=36000/pre;//更新采样频率
-	LCD_ShowNum(261,220,fre,5,16);//更新采样率显示
-	LCD_ShowNum(150,13,V,4,16);
-	LCD_ShowNum(360,25, IC_GetFreq(),4,16);
-	LCD_ShowNum(360,65, IC_GetDuty(),4,16);
-
-	
-	for(x=0;x<256;x++)
-	{	
-		POINT_COLOR=BLACK;	//按列清除
-		if(x!=128)	//去除y轴列清除
-			lcd_huaxian(x,4,x,196);
-		
-		//绘制坐标
-		POINT_COLOR=WHITE;
-		lcd_huaxian(0,0,0,200);
-		lcd_huadian(x,100,WHITE);
-		if(x == table[h])	
-		{
-			lcd_huaxian(x,1,x,3);
-			lcd_huaxian(x,101,x,103);
-			lcd_huaxian(x,199,x,197);
-			h++;
-			if(h>=16) h=0;
-		}	
-		if(x==128) 
-		{
-			lcd_huaxian(x,1,x,199);
-			for(i=10;i<200;i+=10)
-			{
-				lcd_huaxian(125,i,127,i);
-			}
-		}
-		
-		pre_vol = 50+adcx[x]/4096.0*100;
-
-		//波形更新
-		if(mode==1)
-		{
-			POINT_COLOR=YELLOW;
-			if(x>0&&x<255&&x!=128)	//去除第一个，最后一个以及y轴上点的绘制
-				lcd_huaxian(x,past_vol,x+1,pre_vol);
-		}
-		else
-			lcd_huadian(x,pre_vol,YELLOW);
-		
-		past_vol = pre_vol;
-	}
-	
-}
-
-/******************************************************************
-函数名称:InitBufInArray()
-函数功能:正弦波值初始化，将正弦波各点的值存入magout[]数组中
-参数说明:
-备    注:需要拔掉WIFI模块，否则输出电压出错
-*******************************************************************/
-                                  /*三角波*/
-/*
-void InitBufInArray(void)
-{
-    u16 i;
-    float fx;
-    for(i=0; i<NPT; i++)
-    {
-			if((i%128)<=64)
-        fx = 0;
-			else
-				fx = 1;
-        magout[i] = (u16)(2048+2048*fx);
-    }
-}
-*/
-                                  /*锯齿波*/
-
-/*
-void InitBufInArray(void)        
-{
-    u16 i;
-    float fx;
-    for(i=0; i<NPT; i++)
-    { 
-			magout[i]=(u16)(1.0*i/255*2048);
-			}
-			
-}
-*/
-                                  /*正弦波*/
 
 void InitBufInArray(void)        
 {
@@ -425,7 +249,7 @@ void DMA1_Channel1_IRQHandler(void)
 		{
 			t=0;
 			adc_flag=1;
-			DMA_Cmd(DMA1_Channel1, DISABLE);        //失能DMA
+			DMA_Cmd(DMA1_Channel1, DISABLE);        //使能DMA
 		}
 	}
 	DMA_ClearITPendingBit(DMA1_IT_TC1);
@@ -465,7 +289,7 @@ void EXTI0_IRQHandler(void)
 			LCD_ShowString(260,128,200,16,16,"ing...");
 		else
 			LCD_ShowString(260,128,200,16,16,"stop");
-		Serial_Printf("\r\nmv/div%d", V);
+		Serial_Printf("\r\nmv/div%d", uint_voltage);
 		Serial_Printf("\r\nmax(mv)%d", adcmax);
 		Serial_Printf("\r\nmin(mv)%d", adcmin);
 		Serial_Printf("\r\nvpp(mv)%d", adcmax-adcmin);
