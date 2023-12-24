@@ -69,7 +69,7 @@ void DrawUI(void)
 // 示波器窗口更新
 // mode=1时绘制 data的波形
 //
-void UpdateWindow(u16 mode,u32 data[1024])
+void UpdateWindow(IN u16 mode,IN u32 data[1024])
 {
 	u16 x,i,past_vol,pre_vol;
 	static u16 h; 
@@ -117,13 +117,21 @@ void UpdateWindow(u16 mode,u32 data[1024])
 	}
 }
 
-void UpdateInformation(u16 pre,int uint_voltage)
+void UpdateInformation(IN u16 pre,IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency)
 {
 	u16 fre;
 	POINT_COLOR=BLUE;
-	fre=36000/pre;//更新采样频率
-	LCD_ShowNum(261,220,fre,5,16);//更新采样率显示
+	fre=36000/pre;							//更新采样频率
+	LCD_ShowNum(281,220,fre,5,16);			//更新采样率显示
+	LCD_ShowNum(281,180,frequency,5,16);           // 显示频率
+	
 	LCD_ShowNum(150,13,uint_voltage,4,16);
+
+	LCD_ShowNum(290,25,adcmax,4,16);			//显示最大值
+	LCD_ShowNum(290,65,adcmin,4,16);			//显示最小值
+	LCD_ShowNum(290,105,adcmax-adcmin,4,16);	//显示幅值
+	
+	
 	// LCD_ShowNum(360,25, IC_GetFreq(),4,16);
 	// LCD_ShowNum(360,65, IC_GetDuty(),4,16);
 

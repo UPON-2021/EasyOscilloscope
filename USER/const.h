@@ -1,5 +1,5 @@
-#ifndef CONST_VAR
-#define CONST_VAR
+#ifndef CONST_VAR_H
+#define CONST_VAR_H
 
 #define NPT 1024 //采样次数
 #define PI2 6.28318530717959

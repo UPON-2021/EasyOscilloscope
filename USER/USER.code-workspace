@@ -7,7 +7,11 @@
     "settings": {
         "files.associations": {
             "sys.h": "c",
-            "const.h": "c"
+            "const.h": "c",
+            "led.h": "c",
+            "ui.h": "c",
+            "lcd.h": "c",
+            "utils.h": "c"
         }
     },
     "extensions": {}
