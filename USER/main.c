@@ -38,8 +38,8 @@ void sinout(void);//正弦波输出
 
 int long fftin [NPT];//FFT输入
 int long fftout[NPT];//FFT输出
-u32 FFT_Mag[NPT/2]={0};//幅频特性
-u16 magout[NPT];//模拟正弦波输出缓存区
+//u32 FFT_Mag[NPT/2]={0};//幅频特性
+u32 magout[NPT];//模拟正弦波输出缓存区
 
 
 u32 currentadc;//实时采样数据
@@ -64,7 +64,7 @@ u16 key;//按键值
 void init(void){
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	MYDMA1_Config(DMA1_Channel1,(u32)&ADC1->DR,(u32)&currentadc,1);
-	uart_init(9600);
+	uart_init(115200);
 	delay_init();
 	LED_Init();
 	EXTIX_Init();
@@ -78,6 +78,7 @@ void init(void){
 	LCD_Clear(BLACK);
 	//	AD0 = AD_GetValue(ADC_Channel_8);
 	//	AD1 = AD_GetValue(ADC_Channel_9);
+	InitBufInArray();
 }
 
 int main()
@@ -88,6 +89,10 @@ int main()
 	while(1)
 	{
 		WaitUntilSampingFinished(IN OUT &adc_flag); 
+		for (u32 i = 0 ; i <= NPT ; i+=1){
+			adcx[i] = magout[i];
+		}
+
 		CollectDataProcessor(IN adcx,OUT &adcmax,OUT &adcmin,OUT fftin);
 		GetPowerMag(IN fftin,IN pre,OUT fftout,OUT &frequency);
 	
@@ -103,12 +108,12 @@ int main()
 
 void InitBufInArray(void)        
 {
-    u16 i;
+    u32 i;
     float fx;
     for(i=0; i<NPT; i++)
     {
-        fx = sin((PI2*i)/NPT);
-        magout[i] = (u16)(2048+2048*fx);
+        fx = sin((PI2*i)/(NPT/24));
+        magout[i] = (u32)(2048+2048*fx);
     }
 }
 
@@ -195,9 +200,20 @@ void EXTI0_IRQHandler(void)
  
 void EXTI3_IRQHandler(void)
 {
+	u32 temp = 0;
+	u8 flag = 0;  // 检测长按还是短按
 	delay_ms(10);//消抖
-	if(KEY1==0)	 //按键KEY1
-	{	
+	while (KEY1 == 0){		
+		delay_ms(1);
+		if (temp >= 3000){
+			BEEP = 1;
+			delay_ms(800);
+			flag = 1;
+			BEEP = 0;
+		}
+		temp += 1;
+	}
+	if (flag == 0){
 		BEEP=1;
 		delay_ms(50);
 		BEEP=0;
@@ -206,8 +222,8 @@ void EXTI3_IRQHandler(void)
 		{
 			pre=1;
 		}
-		TIM_PrescalerConfig(TIM2,pre-1,TIM_PSCReloadMode_Immediate);
-	}		 
+	}
+
 	EXTI_ClearITPendingBit(EXTI_Line3);  //清除LINE3上的中断标志位  
 }
 

@@ -2,8 +2,12 @@
 #define UTILS_DEFINED_H
 #include "sys.h"
 #include "led.h"
+#include "time.h"
 #include "const.h"
 #include "usart.h"
+#include "beep.h"
+#include "math.h"
+#include "stm32f10x.h"
 
 void WaitUntilSampingFinished(IN u8* flag); 
 void CollectDataProcessor(IN u32 adcx[NPT],OUT u32* adcmax,OUT u32* adcmin,OUT int long fftin[NPT]);

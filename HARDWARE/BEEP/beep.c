@@ -27,3 +27,19 @@ void BEEP_Init(void)
 
 	GPIO_ResetBits(GPIOB,GPIO_Pin_8);// ‰≥ˆ0£¨πÿ±’∑‰√˘∆˜ ‰≥ˆ
 }
+
+// beep 30∫¡√Î
+void BEEP_Short(void)
+{
+	BEEP = 1;
+	delay_ms(50);
+	BEEP = 0;
+}
+
+// beep 800∫¡√Î
+void BEEP_Long(void)
+{
+	BEEP = 1;
+	delay_ms(800);
+	BEEP = 0;
+}

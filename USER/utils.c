@@ -72,6 +72,22 @@ void GetPowerMag(IN int long fftin [NPT],IN u16 pre,OUT int long fftout [NPT],OU
 	*frequency=(u16)(temp/(pre/36.0));		
 }
 
+//
+// 将fft的结果对数处理
+//
+// void fft2shift(IN int long fftout[NPT],OUT double fftshift[NPT])
+// {
+// 	u16 i;
+// 	for (i=0;i<NPT;i++)
+// 	{
+// 		fftshift[i] = log10
+// 	}
+// }
+
+//
+// 处理串口消息
+// pre 
+//
 void UsartMessageProcessor(IN OUT u16* pre,IN OUT int* uint_voltage )
 {
 		DMA_Cmd(DMA1_Channel1,ENABLE);//使能DMA1-CH1
@@ -104,3 +120,32 @@ void UsartMessageProcessor(IN OUT u16* pre,IN OUT int* uint_voltage )
 			Serial_RxFlag = 0;
 		}
 }
+
+
+//
+// 检测长按还是短按,控制蜂鸣器给出对应提示
+// 弃用 函数指针不会写 
+//
+// void CheckKeyPress(IN u8 (*key)(GPIO_TypeDef* GPIOx,uint16_t GPIO_Pin),OUT u8* flag)
+// {
+// 	*flag = 0;
+// 	u32 temp = 0;
+// 	while (key == 0){
+// 		temp += 1;
+// 		delay_ms(1);
+// 		if (temp >= 3000)
+// 		{
+// 			*flag = 1;
+// 			BEEP_Long();
+// 			return ;
+// 		}
+
+// 	}
+// 	if (*flag == 0)
+// 		{
+// 			BEEP_Short();
+// 		}
+// 	return ;
+// }
+
+
