@@ -8,7 +8,8 @@
 #define OUT         //这个变量是输出
 //#define UNIT_VOLTAGE 660 //纵坐标单位刻度 mv/div
 
-
+#define DRAWLINE 1
+#define DRAWFFT  2
 
 
 #endif 

@@ -104,14 +104,27 @@ void UpdateWindow(IN u16 mode,IN u32 data[1024])
 		pre_vol = 50+data[x]/4096.0*100;
 
 		//波形更新
-		if(mode==1)
+		if(mode==DRAWLINE)
 		{
 			POINT_COLOR=YELLOW;
 			if(x>0&&x<255&&x!=128)	//去除第一个，最后一个以及y轴上点的绘制
 				draw_line(x,past_vol,x+1,pre_vol);
 		}
-		else
-			draw_point(x,pre_vol,YELLOW);
+		// else
+		// {
+		// 	draw_point(x,pre_vol,YELLOW);
+		// }
+		if(mode==DRAWFFT)
+		{
+			POINT_COLOR = YELLOW;
+			if(x>0&&x<255&&x!=128)	//去除第一个，最后一个以及y轴上点的绘制
+				draw_line(x,past_vol-40,x+1,pre_vol-40);
+		}
+		// else
+		// {
+		// 	draw_point(x,pre_vol-40,YELLOW);
+		// }
+		
 		
 		past_vol = pre_vol;
 	}

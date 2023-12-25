@@ -75,14 +75,14 @@ void GetPowerMag(IN int long fftin [NPT],IN u16 pre,OUT int long fftout [NPT],OU
 //
 // 将fft的结果对数处理
 //
-// void fft2shift(IN int long fftout[NPT],OUT double fftshift[NPT])
-// {
-// 	u16 i;
-// 	for (i=0;i<NPT;i++)
-// 	{
-// 		fftshift[i] = log10
-// 	}
-// }
+void fft2shift(IN int long fftout[NPT],OUT long fftshift[NPT])
+{
+	u16 i;
+	for (i=0;i<NPT;i++)
+	{
+		fftshift[i] = (long) (log10(fftout[i])*500);
+	}
+}
 
 //
 // 处理串口消息

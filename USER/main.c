@@ -38,9 +38,12 @@ void sinout(void);//正弦波输出
 
 int long fftin [NPT];//FFT输入
 int long fftout[NPT];//FFT输出
+int long fftshift[NPT]; //对数处理后的FFT
+
 //u32 FFT_Mag[NPT/2]={0};//幅频特性
 u32 magout[NPT];//模拟正弦波输出缓存区
 
+u8 isdisplayfft = 0; // 是否展示FFT后的结果
 
 u32 currentadc;//实时采样数据
 u32 adcx[NPT];//adc数值缓存
@@ -89,18 +92,25 @@ int main()
 	while(1)
 	{
 		WaitUntilSampingFinished(IN OUT &adc_flag); 
-		for (u32 i = 0 ; i <= NPT ; i+=1){
-			adcx[i] = magout[i];
-		}
+		// for (u32 i = 0 ; i <= NPT ; i+=1){
+		// 	adcx[i] = magout[i];
+		// }
 
 		CollectDataProcessor(IN adcx,OUT &adcmax,OUT &adcmin,OUT fftin);
 		GetPowerMag(IN fftin,IN pre,OUT fftout,OUT &frequency);
-	
+
+		
 		if(show_flag==1)
 		{
 			UpdateInformation(IN pre,IN uint_voltage,IN adcmax,IN adcmin,IN frequency);
-			UpdateWindow(IN 1,IN adcx);
-		}	
+			if (isdisplayfft == 1){
+				fft2shift(IN fftout,OUT fftshift);
+				UpdateWindow(IN DRAWFFT,IN fftshift);
+			}else {
+				UpdateWindow(IN DRAWLINE,adcx);	
+			}
+		}
+
 		
 		UsartMessageProcessor(IN OUT &pre,IN OUT &uint_voltage);
 	}
@@ -206,9 +216,10 @@ void EXTI3_IRQHandler(void)
 	while (KEY1 == 0){		
 		delay_ms(1);
 		if (temp >= 3000){
+			flag = 1;
+			isdisplayfft = !isdisplayfft;
 			BEEP = 1;
 			delay_ms(800);
-			flag = 1;
 			BEEP = 0;
 		}
 		temp += 1;
