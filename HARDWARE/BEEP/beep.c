@@ -28,7 +28,7 @@ void BEEP_Init(void)
 	GPIO_ResetBits(GPIOB,GPIO_Pin_8);//输出0，关闭蜂鸣器输出
 }
 
-// beep 30毫秒
+// beep 50毫秒
 void BEEP_Short(void)
 {
 	BEEP = 1;
@@ -42,4 +42,15 @@ void BEEP_Long(void)
 	BEEP = 1;
 	delay_ms(800);
 	BEEP = 0;
+}
+
+// beep 30ms 三次
+void BEEP_Three(void)
+{
+	BEEP_Short();
+	delay_ms(100);
+	BEEP_Short();
+	delay_ms(100);
+	BEEP_Short();
+	delay_ms(100);
 }

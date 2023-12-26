@@ -17,6 +17,9 @@
 #define BEEP PBout(8)	// BEEP,蜂鸣器接口		   
 
 void BEEP_Init(void);	//初始化
-		 				    
+void BEEP_Short(void);	// beep 50毫秒
+void BEEP_Long(void);	// beep 800毫秒
+void BEEP_Three(void);	// beep 30ms 三次
+
 #endif
 

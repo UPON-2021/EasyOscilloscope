@@ -48,3 +48,6 @@
 .\objects\main.o: D:\EmbeddedEnv\keil\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\main.o: ..\HARDWARE\IC\IC.h
 .\objects\main.o: ui.h
+.\objects\main.o: const.h
+.\objects\main.o: utils.h
+.\objects\main.o: D:\EmbeddedEnv\keil\ARM\ARMCC\Bin\..\include\time.h

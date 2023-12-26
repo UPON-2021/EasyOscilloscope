@@ -31,7 +31,6 @@ KEY1降低采样频率
 #include "const.h"
 
 void InitBufInArray(u16); // 正弦波输出缓存
-void sinout(void);        // 正弦波输出
 
 int long fftin[NPT];    // FFT输入
 int long fftout[NPT];   // FFT输出
@@ -42,6 +41,7 @@ u32 magout[NPT]; // 模拟正弦波输出缓存区
 
 u8 isdisplayfft    = 0; // 是否展示FFT后的结果
 u8 isSendDebuginfo = 0; // 是否发送调试信息
+u8 isDebug         = 0; // 是否调试
 
 u32 currentadc;      // 实时采样数据
 u32 adcx[NPT];       // adc数值缓存
@@ -128,21 +128,6 @@ void InitBufInArray(u16 frequency)
 }
 
 /******************************************************************
-函数名称:sinout()
-函数功能:正弦波输出
-参数说明:
-备    注:将此函数置于定时器中断中，可模拟输出正弦波
-*******************************************************************/
-void sinout(void)
-{
-    static u16 i = 0;
-    DAC_SetChannel1Data(DAC_Align_12b_R, magout[i]);
-    i++;
-    if (i >= NPT)
-        i = 0;
-}
-
-/******************************************************************
 简介：DMA中断用于完整采样一次（采样1024次），
       并将其存储于adcx[]缓存数组中，等待后续数据处理
 *******************************************************************/
@@ -168,7 +153,6 @@ void TIM3_IRQHandler(void) // TIM3中断
 {
     if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) // 检查指定的TIM中断发生与否:TIM 中断源
     {
-        sinout();
         TIM_ClearITPendingBit(TIM3, TIM_IT_Update); // 清除TIMx的中断待处理位:TIM 中断源
     }
 }
@@ -181,25 +165,29 @@ KEY0按键增加采样频率
 *******************************************************************/
 void EXTI0_IRQHandler(void)
 {
-    delay_ms(10);   // 消抖
-    if (WK_UP == 1) // WK_UP按键
-    {
-        BEEP = 1;
-        delay_ms(50);
-        BEEP      = 0;
-        show_flag = !show_flag;
+    u32 temp = 0;
+    u8 flag  = 0; // 检测长按还是短按
+    delay_ms(10); // 消抖
 
+    while (WK_UP == 1) {
+        delay_ms(1);
+        if (temp >= 3000) {
+            delay_ms(1);
+            flag    = 1;
+            isDebug = !isDebug;
+            BEEP_Three();
+        }
+        temp += 1;
+    }
+    if (flag == 0) {
+        BEEP_Short();
+        show_flag   = !show_flag;
         POINT_COLOR = MAGENTA;
-        if (show_flag)
+        if (show_flag) {
             LCD_ShowString(260, 128, 200, 16, 16, "ing...");
-        else
+        } else {
             LCD_ShowString(260, 128, 200, 16, 16, "stop");
-        Serial_Printf("\r\nmv/div%d", uint_voltage);
-        Serial_Printf("\r\nmax(mv)%d", adcmax);
-        Serial_Printf("\r\nmin(mv)%d", adcmin);
-        Serial_Printf("\r\nvpp(mv)%d", adcmax - adcmin);
-        Serial_Printf("\r\nf(Hz)%d", frequency);
-        Serial_Printf("\r\nOSR(Hz)%d", fre);
+        }
     }
     EXTI_ClearITPendingBit(EXTI_Line0); // 清除LINE0上的中断标志位
 }
@@ -223,10 +211,6 @@ void EXTI3_IRQHandler(void)
 
         uint_voltage = uint_voltage + 10;
         if (uint_voltage > 1000) { uint_voltage = 660; }
-        // pre  = pre + 5;
-        // if (pre > 72) {
-        //     pre = 1;
-        // }
     }
 
     EXTI_ClearITPendingBit(EXTI_Line3); // 清除LINE3上的中断标志位
@@ -234,19 +218,6 @@ void EXTI3_IRQHandler(void)
 
 void EXTI4_IRQHandler(void)
 {
-    // delay_ms(10);  // 消抖
-    // if (KEY0 == 0) // 按键KEY0
-    // {
-    //     BEEP = 1;
-    //     delay_ms(50);
-    //     BEEP = 0;
-    //     pre  = pre - 5;
-    //     if (pre <= 1) {
-    //         pre = 1;
-    //     }
-    //     TIM_PrescalerConfig(TIM2, pre - 1, TIM_PSCReloadMode_Immediate);
-    // }
-
     u32 temp = 0;
     u8 flag  = 0; // 检测长按还是短按
     delay_ms(10); // 消抖
@@ -263,10 +234,6 @@ void EXTI4_IRQHandler(void)
         BEEP_Short();
         uint_voltage = uint_voltage - 10;
         if (uint_voltage < 0) { uint_voltage = 660; }
-        // pre  = pre - 5;
-        // if (pre <= 1) {
-        //     pre = 1;
-        // }
     }
 
     EXTI_ClearITPendingBit(EXTI_Line4); // 清除LINE4上的中断标志位

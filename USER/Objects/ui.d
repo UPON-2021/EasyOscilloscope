@@ -32,3 +32,4 @@
 .\objects\ui.o: ..\STM32F10x_FWLib\inc\misc.h
 .\objects\ui.o: ..\HARDWARE\LCD\lcd.h
 .\objects\ui.o: D:\EmbeddedEnv\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\ui.o: const.h

@@ -11,7 +11,9 @@
             "led.h": "c",
             "ui.h": "c",
             "lcd.h": "c",
-            "utils.h": "c"
+            "utils.h": "c",
+            "beep.h": "c",
+            "time.h": "c"
         }
     },
     "extensions": {}

@@ -110,6 +110,22 @@ void UsartMessageProcessor(IN OUT u16 *pre, IN OUT int *uint_voltage)
     }
 }
 
+
+//
+// 向串口发送当前状态信息
+//
+void SendUsartStatusMessage(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 adcmin, IN u16 uint_voltage, IN u16 fre)
+{
+    Serial_Printf("\r\n============STATUS===============");
+    Serial_Printf("\r\nmv/div%d", uint_voltage);
+    Serial_Printf("\r\nmax(mv)%d", adcmax);
+    Serial_Printf("\r\nmin(mv)%d", adcmin);
+    Serial_Printf("\r\nvpp(mv)%d", adcmax - adcmin);
+    Serial_Printf("\r\nf(Hz)%d", frequency);
+    Serial_Printf("\r\nOSR(Hz)%d", fre);
+    Serial_Printf("\r\n============END==================");
+}
+
 //
 // 检测长按还是短按,控制蜂鸣器给出对应提示
 // 弃用 函数指针不会写
