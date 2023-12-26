@@ -13,7 +13,9 @@
             "lcd.h": "c",
             "utils.h": "c",
             "beep.h": "c",
-            "time.h": "c"
+            "time.h": "c",
+            "usart.h": "c",
+            "debug.h": "c"
         }
     },
     "extensions": {}

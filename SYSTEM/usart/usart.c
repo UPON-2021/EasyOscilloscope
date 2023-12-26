@@ -148,7 +148,7 @@ void Serial_SendNumber(uint32_t Number, uint8_t Length)//发送数字
 
 void Serial_Printf(char *format, ...)//格式化字符串，接收可变参数列表
 {
-	char String[100];
+	char String[512];
 	va_list arg;//参数列表变量
 	va_start(arg, format);//从fomat位置开始接收参数表，放在arg里面
 	vsprintf(String, format, arg);//打印位置，格式化字符串，参数表

@@ -124,7 +124,16 @@
         "name": "USER",
         "files": [
           {
+            "path": "const.c"
+          },
+          {
             "path": "const.h"
+          },
+          {
+            "path": "debug.c"
+          },
+          {
+            "path": "debug.h"
           },
           {
             "path": "main.c"

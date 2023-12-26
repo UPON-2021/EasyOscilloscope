@@ -28,6 +28,7 @@ KEY1降低采样频率
 #include "IC.h"
 #include "ui.h"
 #include "utils.h"
+#include "debug.h"
 #include "const.h"
 
 void InitBufInArray(u16); // 正弦波输出缓存
@@ -42,9 +43,11 @@ u32 magout[NPT]; // 模拟正弦波输出缓存区
 u8 isdisplayfft    = 0; // 是否展示FFT后的结果
 u8 isSendDebuginfo = 0; // 是否发送调试信息
 u8 isDebug         = 0; // 是否调试
+u8 debugStatus     = 0; // 调试状态
 
 u32 currentadc;      // 实时采样数据
 u32 adcx[NPT];       // adc数值缓存
+u32 adcxbuff[NPT];   // 第二个缓存
 u32 adcmax;          // 采样最大值
 u32 adcmin;          // 采样最小值
 u8 adc_flag  = 0;    // 采样结束标志
@@ -86,20 +89,24 @@ int main()
     u16 freq_test = 0;
     init();
     DrawUI();
+    Greeting();
 
     while (1) {
         WaitUntilSampingFinished(IN OUT & adc_flag);
         // DEBUG CODE
-        InitBufInArray(freq_test);
-        for (u32 i = 0; i <= NPT; i += 1) {
-            adcx[i] = magout[i];
+        // InitBufInArray(freq_test);
+        // for (u32 i = 0; i <= NPT; i += 1) {
+        //     adcx[i] = magout[i];
+        // }
+        if (isDebug > 0) {
+            DebugDataProcessor(IN & isDebug, OUT & isdisplayfft, IN OUT & isSendDebuginfo, OUT adcx, IN OUT & debugStatus, OUT magout);
         }
 
         CollectDataProcessor(IN adcx, OUT & adcmax, OUT & adcmin, OUT fftin);
         GetPowerMag(IN fftin, IN pre, OUT fftout, OUT & frequency);
 
         if (show_flag == 1) {
-            UpdateInformation(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency);
+            UpdateInformation(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN isDebug);
             if (isdisplayfft == 1) {
                 fft2shift(IN fftout, OUT fftshift);
                 UpdateWindow(IN DRAWFFT, IN uint_voltage, IN fftshift);
@@ -113,7 +120,7 @@ int main()
             SendDebugInfo(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN fftin, IN fftout, IN fftshift, IN adcx);
             isSendDebuginfo = 0;
         }
-        freq_test += 1;
+        // freq_test += 1;
     }
 }
 
@@ -173,8 +180,8 @@ void EXTI0_IRQHandler(void)
         delay_ms(1);
         if (temp >= 3000) {
             delay_ms(1);
-            flag    = 1;
-            isDebug = !isDebug;
+            flag = 1;
+            isDebug++;
             BEEP_Three();
         }
         temp += 1;

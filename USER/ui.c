@@ -20,7 +20,7 @@ void DrawUI(void)
     LCD_ShowString(280, 85, 200, 16, 16, "vpp(mv):");
     LCD_ShowString(324, 220, 200, 16, 16, "Hz");
     // LCD_ShowString(370,5,200,16,16," f(Hz):");
-    // LCD_ShowString(370,45,200,16,16," DUTY(%):");
+    LCD_ShowString(370,45,200,16,16," DUTY(%):");
 
     POINT_COLOR = RED;
     LCD_ShowString(260, 165, 200, 16, 16, "Samping f(Hz):");
@@ -112,7 +112,7 @@ void UpdateWindow(IN u16 mode, IN int uint_voltage,IN u32 data[1024])
     }
 }
 
-void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency)
+void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency,IN u16 isDebug)
 {
     u16 fre;
     POINT_COLOR = BLUE;
@@ -125,6 +125,15 @@ void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 ad
     LCD_ShowNum(290, 25, adcmax, 4, 16);           // 显示最大值
     LCD_ShowNum(290, 65, adcmin, 4, 16);           // 显示最小值
     LCD_ShowNum(290, 105, adcmax - adcmin, 4, 16); // 显示幅值
+
+    // LCD_ShowString()
+    if (isDebug == 1) {
+        POINT_COLOR = CYAN;
+        LCD_ShowString(5, 280, 200, 16, 16, "Debug Mode   ");
+    } else {
+        POINT_COLOR = BLUE;
+        LCD_ShowString(5, 280, 200, 16, 16, "Normal Mode  ");
+    }
 
     // LCD_ShowNum(360,25, IC_GetFreq(),4,16);
     // LCD_ShowNum(360,65, IC_GetDuty(),4,16);
