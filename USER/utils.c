@@ -74,7 +74,7 @@ void fft2shift(IN int long fftout[NPT], OUT long fftshift[NPT])
 {
     u16 i;
     for (i = 0; i < NPT; i++) {
-        fftshift[i] = (long)(log10(fftout[i]) / LOG2 * 200);
+        fftshift[i] = (long)(log10(abs(fftout[i])) / LOG2 * 200);
     }
 }
 
