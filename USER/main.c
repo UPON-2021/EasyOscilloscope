@@ -56,7 +56,7 @@ u8 show_flag = 1;    // 更新暂停标志
 u16 T        = 2000; // 定时器2重载值
 u16 pre      = 36;   // 定时器2预分频值
 u32 fre;             // 采样频率 kHz
-u32 duty = 0;        // 占空比
+u8 duty = 0;        // 占空比
 u16 frequency;       // 波形频率
 uint16_t AD0, AD1;
 
@@ -103,11 +103,11 @@ int main()
             DebugDataProcessor(IN OUT & isDebug, OUT & isdisplayfft, IN OUT & isSendDebuginfo, OUT adcx, IN OUT & debugStatus, OUT magout);
         }
 
-        CollectDataProcessor(IN adcx, OUT & adcmax, OUT & adcmin, OUT fftin);
+        CollectDataProcessor(IN adcx, OUT & adcmax, OUT & adcmin, OUT fftin,OUT &duty);
         GetPowerMag(IN fftin, IN pre, OUT fftout, OUT & frequency);
 
         if (show_flag == 1) {
-            UpdateInformation(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN isDebug);
+            UpdateInformation(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN isDebug,IN duty);
             if (isdisplayfft == 1) {
                 fft2shift(IN fftout, OUT fftshift);
                 UpdateWindow(IN DRAWFFT, IN uint_voltage, IN fftshift);

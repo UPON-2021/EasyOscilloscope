@@ -111,7 +111,7 @@ void UpdateWindow(IN u16 mode, IN int uint_voltage, IN u32 data[1024])
     }
 }
 
-void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency, IN u16 isDebug)
+void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency, IN u16 isDebug,IN u8 duty)
 {
     u16 fre;
     POINT_COLOR = BLUE;
@@ -124,6 +124,8 @@ void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 ad
     LCD_ShowNum(290, 25, adcmax, 4, 16);           // 显示最大值
     LCD_ShowNum(290, 65, adcmin, 4, 16);           // 显示最小值
     LCD_ShowNum(290, 105, adcmax - adcmin, 4, 16); // 显示幅值
+
+    LCD_ShowNum(380,65, duty,4,16);
 
     // LCD_ShowString()
     if (isDebug >= 1) {
@@ -148,7 +150,7 @@ void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 ad
     }
 
     // LCD_ShowNum(360,25, IC_GetFreq(),4,16);
-    // LCD_ShowNum(360,65, IC_GetDuty(),4,16);
+    
 }
 
 void draw_point(u16 a, u16 b, u16 color)

@@ -28,7 +28,7 @@ void DebugDataProcessor(IN OUT u8 *isDebug, IN OUT u8 isdisplayfft, IN OUT u8 is
             replace_buf_array(IN magout, OUT adcx);
             break;
         case 2:
-            init_square_buf_array(50,7, OUT magout);
+            init_square_buf_array(35,17, OUT magout);
             replace_buf_array(IN magout, OUT adcx);
             break;
         case 3:
@@ -80,7 +80,7 @@ void init_square_buf_array(IN u16 duty,IN u16 frequency, OUT u32 magout[NPT])
     float fx;
     for (i = 0; i < NPT; i++) {
         fx = sin((PI2 * i) / (NPT / frequency));
-        if (fx > 0) {
+        if ((fx*2048) > (duty/100.0*2048)) {  //我知道这里不能这么干， 但我觉得这样干也不错
             magout[i] = 4096;
         } else {
             magout[i] = 0;

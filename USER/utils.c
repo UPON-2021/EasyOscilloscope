@@ -18,15 +18,18 @@ void WaitUntilSampingFinished(u8 *flag)
 // IN: adcx 输入adc数值缓存
 // OUT: adcmax 最大值 adcmin 最小值 fftin傅里叶变换数组
 //
-void CollectDataProcessor(IN u32 adcx[NPT], OUT u32 *adcmax, OUT u32 *adcmin, OUT int long fftin[NPT])
+void CollectDataProcessor(IN u32 adcx[NPT], OUT u32 *adcmax, OUT u32 *adcmin, OUT int long fftin[NPT], OUT u8 *duty)
 {
     u16 i;
+    u16 temp;
     *adcmax = adcx[1];
     *adcmin = adcx[1];
     for (i = 0; i < NPT; i++) {
         fftin[i] = 0;
         fftin[i] = adcx[i] << 16;
-
+        if (adcx[i] > 0) {
+            temp += 1;
+        }
         if (adcx[i] >= *adcmax) {
             *adcmax = adcx[i];
         }
@@ -34,6 +37,7 @@ void CollectDataProcessor(IN u32 adcx[NPT], OUT u32 *adcmax, OUT u32 *adcmin, OU
             *adcmin = adcx[i];
         }
     }
+    *duty   = (u8)(temp*100 / NPT);
     *adcmax = *adcmax * 0.8; // 0.8 ≈ 3300/4096
     *adcmin = *adcmin * 0.8;
 }
