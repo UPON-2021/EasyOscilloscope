@@ -110,7 +110,6 @@ void UsartMessageProcessor(IN OUT u16 *pre, IN OUT int *uint_voltage)
     }
 }
 
-
 //
 // 向串口发送当前状态信息
 //
@@ -166,7 +165,7 @@ void SendUsartStatusMessage(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 
 // 	Serial_Printf("\r\n=============END==========");
 // }
 
-void SendDebugInfo(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 adcmin, IN u16 uint_voltage, IN int long fftin[NPT], int long fftout[NPT], int long fftshift[NPT], u32 adcx[NPT])
+void SendDebugInfo(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 adcmin, IN u16 uint_voltage, IN int long fftin[NPT], int long fftout[NPT], int long fftshift[NPT], u32 adcx[NPT], u32 magount[NPT])
 {
     u16 fre;
     fre = 36000 / pre; // 更新采样频率
@@ -193,6 +192,11 @@ void SendDebugInfo(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 adcmin, I
     Serial_Printf("\r\n============ADCX=========");
     for (int i = 0; i < NPT; i++) {
         Serial_Printf("\r\nadcx[%d]:%d", i, adcx[i]);
+    }
+    Serial_Printf("\r\n=============END==========");
+    Serial_Printf("\r\n============MAGOUT=========");
+    for (int i = 0; i < NPT; i++) {
+        Serial_Printf("\r\nmagout[%d]:%d", i, magount[i]);
     }
     Serial_Printf("\r\n=============END==========");
 }

@@ -15,25 +15,28 @@ void Greeting(void)
 }
 
 // 处理串口接收到的debug信息
-void DebugDataProcessor(IN OUT u8* isDebug,IN OUT u8 isdisplayfft, IN OUT u8 isSendDebuginfo, OUT u32 adcx[NPT], IN OUT u8 *debugStatus, IN OUT u32 magout[NPT])
+void DebugDataProcessor(IN OUT u8 *isDebug, IN OUT u8 isdisplayfft, IN OUT u8 isSendDebuginfo, OUT u32 adcx[NPT], IN OUT u8 *debugStatus, IN OUT u32 magout[NPT])
 {
     if (*debugStatus == 0) {
         send_menu();
         *debugStatus = 1;
     }
     // debug_message_processor();
-    switch (*isDebug){
+    switch (*isDebug) {
         case 1:
-            init_sin_buf_array(100,OUT magout);
-            replace_buf_array(IN magout,OUT adcx);
+            init_sin_buf_array(100, OUT magout);
+            replace_buf_array(IN magout, OUT adcx);
             break;
         case 2:
-            init_square_buf_array(50,OUT magout);
-            replace_buf_array(IN magout,OUT adcx);
+            init_square_buf_array(50,7, OUT magout);
+            replace_buf_array(IN magout, OUT adcx);
             break;
         case 3:
-            *isDebug = 0;
+            *isDebug     = 0;
             *debugStatus = 0;
+            break;
+        default:
+            *isDebug = 0;
             break;
     }
 }
@@ -71,12 +74,14 @@ void init_sin_buf_array(IN u16 frequency, OUT u32 magout[NPT])
     }
 }
 
-void init_square_buf_array(IN u16 duty, OUT u32 magout[NPT])
+void init_square_buf_array(IN u16 duty,IN u16 frequency, OUT u32 magout[NPT])
 {
     u32 i;
+    float fx;
     for (i = 0; i < NPT; i++) {
-        if (i < (NPT * duty / 100)) {
-            magout[i] = 4095;
+        fx = sin((PI2 * i) / (NPT / frequency));
+        if (fx > 0) {
+            magout[i] = 4096;
         } else {
             magout[i] = 0;
         }

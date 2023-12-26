@@ -19,7 +19,7 @@ void Greeting(void);
 void send_menu(void);
 u8 debug_message_processor(void);
 void init_sin_buf_array(IN u16 frequency, OUT u32 magout[NPT]);
-void init_square_buf_array(IN u16 duty, OUT u32 magout[NPT]);
+void init_square_buf_array(IN u16 duty,IN u16 frequency, OUT u32 magout[NPT]);
 void replace_buf_array(IN u32 magout[NPT], OUT u32 adcx[NPT]);
 
 #endif // !DEBUG_H

@@ -99,7 +99,7 @@ int main()
         //     adcx[i] = magout[i];
         // }
         if (isDebug > 0) {
-            DebugDataProcessor(IN & isDebug, OUT & isdisplayfft, IN OUT & isSendDebuginfo, OUT adcx, IN OUT & debugStatus, OUT magout);
+            DebugDataProcessor(IN OUT & isDebug, OUT & isdisplayfft, IN OUT & isSendDebuginfo, OUT adcx, IN OUT & debugStatus, OUT magout);
         }
 
         CollectDataProcessor(IN adcx, OUT & adcmax, OUT & adcmin, OUT fftin);
@@ -117,7 +117,7 @@ int main()
 
         UsartMessageProcessor(IN OUT & pre, IN OUT & uint_voltage);
         if (isSendDebuginfo == 1) {
-            SendDebugInfo(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN fftin, IN fftout, IN fftshift, IN adcx);
+            SendDebugInfo(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN fftin, IN fftout, IN fftshift, IN adcx, IN magout);
             isSendDebuginfo = 0;
         }
         // freq_test += 1;

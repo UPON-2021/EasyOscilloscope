@@ -20,7 +20,7 @@ void DrawUI(void)
     LCD_ShowString(280, 85, 200, 16, 16, "vpp(mv):");
     LCD_ShowString(324, 220, 200, 16, 16, "Hz");
     // LCD_ShowString(370,5,200,16,16," f(Hz):");
-    LCD_ShowString(370,45,200,16,16," DUTY(%):");
+    LCD_ShowString(370, 45, 200, 16, 16, " DUTY(%):");
 
     POINT_COLOR = RED;
     LCD_ShowString(260, 165, 200, 16, 16, "Samping f(Hz):");
@@ -65,7 +65,7 @@ void DrawUI(void)
 // 示波器窗口更新
 // mode=1时绘制 data的波形
 //
-void UpdateWindow(IN u16 mode, IN int uint_voltage,IN u32 data[1024])
+void UpdateWindow(IN u16 mode, IN int uint_voltage, IN u32 data[1024])
 {
     u16 x, i, past_vol, pre_vol;
     static u16 h;
@@ -107,12 +107,11 @@ void UpdateWindow(IN u16 mode, IN int uint_voltage,IN u32 data[1024])
                 draw_line(x, past_vol - 40, x + 1, pre_vol - 40);
         }
 
-
         past_vol = pre_vol;
     }
 }
 
-void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency,IN u16 isDebug)
+void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 adcmin, IN u16 frequency, IN u16 isDebug)
 {
     u16 fre;
     POINT_COLOR = BLUE;
@@ -127,12 +126,25 @@ void UpdateInformation(IN u16 pre, IN int uint_voltage, IN u32 adcmax, IN u32 ad
     LCD_ShowNum(290, 105, adcmax - adcmin, 4, 16); // 显示幅值
 
     // LCD_ShowString()
-    if (isDebug == 1) {
+    if (isDebug >= 1) {
         POINT_COLOR = CYAN;
-        LCD_ShowString(5, 280, 200, 16, 16, "Debug Mode   ");
+        switch (isDebug) {
+            case 1:
+                LCD_ShowString(5, 280, 200, 16, 16, "Debug Mode Sin ");
+                break;
+            case 2:
+                LCD_ShowString(5, 280, 200, 16, 16, "Debug Mode Squre ");
+                break;
+            case 3:
+                // LCD_ShowString(5, 280, 200, 16, 16, "If you are seiing ths, may be something wrong... ");
+                break;
+            default:
+                break;
+        }
+        // LCD_ShowString(5, 280, 200, 16, 16, "Debug Mode   ");
     } else {
         POINT_COLOR = BLUE;
-        LCD_ShowString(5, 280, 200, 16, 16, "Normal Mode  ");
+        LCD_ShowString(5, 280, 200, 16, 16, "Normal Mode            ");
     }
 
     // LCD_ShowNum(360,25, IC_GetFreq(),4,16);
