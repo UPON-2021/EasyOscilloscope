@@ -116,12 +116,19 @@ void UsartMessageProcessor(IN OUT u16 *pre, IN OUT int *uint_voltage)
 void SendUsartStatusMessage(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 adcmin, IN u16 uint_voltage, IN u16 fre)
 {
     Serial_Printf("\r\n============STATUS===============");
-    Serial_Printf("\r\nmv/div%d", uint_voltage);
-    Serial_Printf("\r\nmax(mv)%d", adcmax);
-    Serial_Printf("\r\nmin(mv)%d", adcmin);
-    Serial_Printf("\r\nvpp(mv)%d", adcmax - adcmin);
-    Serial_Printf("\r\nf(Hz)%d", frequency);
-    Serial_Printf("\r\nOSR(Hz)%d", fre);
+    // Serial_Printf("\r\nmv/div%d", uint_voltage);
+    // Serial_Printf("\r\nmax(mv)%d", adcmax);
+    // Serial_Printf("\r\nmin(mv)%d", adcmin);
+    // Serial_Printf("\r\nvpp(mv)%d", adcmax - adcmin);
+    // Serial_Printf("\r\nf(Hz)%d", frequency);
+    // Serial_Printf("\r\nOSR(Hz)%d", fre);
+
+    Serial_Printf("\r\nuint_voltage  %d mv/div", uint_voltage);
+    Serial_Printf("\r\nadcmax        %d mv", adcmax);
+    Serial_Printf("\r\nadcmin        %d mv", adcmin);
+    Serial_Printf("\r\nadcmax-adcmin %d mv", adcmax - adcmin);
+    Serial_Printf("\r\nfrequency     %d Hz", frequency);
+    Serial_Printf("\r\nOSR           %d Hz", fre);
     Serial_Printf("\r\n============END==================");
 }
 

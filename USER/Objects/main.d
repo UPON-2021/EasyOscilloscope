@@ -51,3 +51,4 @@
 .\objects\main.o: const.h
 .\objects\main.o: utils.h
 .\objects\main.o: D:\EmbeddedEnv\keil\ARM\ARMCC\Bin\..\include\time.h
+.\objects\main.o: debug.h

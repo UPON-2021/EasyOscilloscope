@@ -27,66 +27,49 @@ Project File Date:  12/26/2023
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\EmbeddedEnv\keil\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling const.c...
-compiling main.c...
-utils.h(18): warning:  #1-D: last line of file ends without a newline
-  #endif
-main.c(94): error:  #254: type name is not allowed
-          for (u32 i = 0; i <= NPT; i += 1) {
-main.c(94): error:  #65: expected a ";"
-          for (u32 i = 0; i <= NPT; i += 1) {
-main.c(94): error:  #20: identifier "i" is undefined
-          for (u32 i = 0; i <= NPT; i += 1) {
-main.c(104): warning:  #223-D: function "fft2shift" declared implicitly
-                  fft2shift(IN fftout, OUT fftshift);
-main.c(105): warning:  #167-D: argument of type "long *" is incompatible with parameter of type "u32 *"
-                  UpdateWindow(IN DRAWFFT, IN uint_voltage, IN fftshift);
-main.c(217): warning:  #223-D: function "BEEP_Long" declared implicitly
-              BEEP_Long();
-main.c(222): warning:  #223-D: function "BEEP_Short" declared implicitly
-          BEEP_Short();
-main.c(258): warning:  #223-D: function "BEEP_Long" declared implicitly
-              BEEP_Long();
-main.c(263): warning:  #223-D: function "BEEP_Short" declared implicitly
-          BEEP_Short();
-main.c: 7 warnings, 3 errors
-compiling beep.c...
-..\HARDWARE\BEEP\beep.c(35): warning:  #223-D: function "delay_ms" declared implicitly
-  	delay_ms(50);
-..\HARDWARE\BEEP\beep.c(43): warning:  #223-D: function "delay_ms" declared implicitly
-  	delay_ms(800);
-..\HARDWARE\BEEP\beep.c(45): warning:  #1-D: last line of file ends without a newline
+compiling debug.c...
+debug.c(44): warning:  #1295-D: Deprecated declaration debug_data_generator - give arg types
+  void debug_data_generator();
+debug.c(51): warning:  #223-D: function "strcmp" declared implicitly
+          if (strcmp(Serial_RxPacket, "1") == 0) {
+debug.c(93): error:  #254: type name is not allowed
+      for (u32 i = 0; i < NPT; i++) {
+debug.c(93): error:  #65: expected a ";"
+      for (u32 i = 0; i < NPT; i++) {
+debug.c(93): error:  #20: identifier "i" is undefined
+      for (u32 i = 0; i < NPT; i++) {
+debug.c(105): warning:  #1-D: last line of file ends without a newline
   }
-..\HARDWARE\BEEP\beep.c: 3 warnings, 0 errors
+debug.c: 3 warnings, 3 errors
 compiling utils.c...
-utils.h(18): warning:  #1-D: last line of file ends without a newline
+utils.h(23): warning:  #1-D: last line of file ends without a newline
   #endif
 utils.c(10): warning:  #223-D: function "delay_ms" declared implicitly
           delay_ms(100);
 utils.c(53): warning:  #223-D: function "cr4_fft_1024_stm32" declared implicitly
       cr4_fft_1024_stm32(fftout, fftin, NPT);
+utils.c(77): warning:  #223-D: function "abs" declared implicitly
+          fftshift[i] = (long)(log10(abs(fftout[i])) / LOG2 * 200);
 utils.c(88): warning:  #223-D: function "delay_ms" declared implicitly
       delay_ms(100);
 utils.c(90): warning:  #223-D: function "strcmp" declared implicitly
           if (strcmp(Serial_RxPacket, "F+") == 0) {
-utils.c(166): error:  #29: expected an expression
+utils.c(188): error:  #29: expected an expression
       for (int i = 0; i < NPT; i++) {
-utils.c(166): error:  #20: identifier "i" is undefined
+utils.c(188): error:  #20: identifier "i" is undefined
       for (int i = 0; i < NPT; i++) {
-utils.c(170): error:  #29: expected an expression
+utils.c(192): error:  #29: expected an expression
       for (int i = 0; i < NPT; i++) {
-utils.c(174): error:  #29: expected an expression
+utils.c(196): error:  #29: expected an expression
       for (int i = 0; i < NPT; i++) {
-utils.c(178): error:  #29: expected an expression
+utils.c(200): error:  #29: expected an expression
       for (int i = 0; i < NPT; i++) {
-utils.c(182): warning:  #1-D: last line of file ends without a newline
+utils.c(205): error:  #29: expected an expression
+      for (int i = 0; i < NPT; i++) {
+utils.c(209): warning:  #1-D: last line of file ends without a newline
   }
-utils.c: 6 warnings, 5 errors
-compiling ui.c...
-ui.c(141): warning:  #1-D: last line of file ends without a newline
-  }
-ui.c: 1 warning, 0 errors
-".\Objects\简易示波器.axf" - 8 Error(s), 17 Warning(s).
+utils.c: 7 warnings, 6 errors
+".\Objects\简易示波器.axf" - 9 Error(s), 10 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -100,7 +83,7 @@ Package Vendor: Keil
 
 <h2>Collection of Component Files used:</h2>
 Target not created.
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

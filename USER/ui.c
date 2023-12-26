@@ -29,7 +29,7 @@ void DrawUI(void)
     // LCD_ShowString(350,128,200,16,16,"AD1:");
 
     POINT_COLOR = BRRED;
-    LCD_ShowString(5, 250, 200, 16, 16, "IN:PA6,PB13");
+    LCD_ShowString(5, 250, 200, 16, 16, "INPUT -> PA6");
 
     POINT_COLOR = BLUE;
     // LCD_ShowNum(150,13,V,4,16);//mv/div

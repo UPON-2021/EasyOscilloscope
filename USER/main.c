@@ -56,6 +56,7 @@ u8 show_flag = 1;    // 更新暂停标志
 u16 T        = 2000; // 定时器2重载值
 u16 pre      = 36;   // 定时器2预分频值
 u32 fre;             // 采样频率 kHz
+u32 duty = 0;        // 占空比
 u16 frequency;       // 波形频率
 uint16_t AD0, AD1;
 
@@ -75,7 +76,7 @@ void init(void)
     LCD_Init();
     Adc_Init();
     BEEP_Init();
-    // InitBufInArray();
+    InitBufInArray(16);
     TIM3_Int_Init(39, 71);         // 72MHz/40/72=25kHz   25kHz/1024≈25Hz 正弦波频率约为24.5Hz
     TIM2_PWM_Init(T - 1, pre - 1); // 最大频率72000000/1/2000=3.6KHz
     Dac1_Init();
@@ -132,6 +133,15 @@ void InitBufInArray(u16 frequency)
         fx        = sin((PI2 * i) / (NPT / frequency));
         magout[i] = (u32)(2048 + 2048 * fx);
     }
+}
+
+void sinout(void)
+{
+	static u16 i=0;
+	DAC_SetChannel1Data(DAC_Align_12b_R,magout[i]);
+	i++;
+	if(i>=NPT)
+		i=0;
 }
 
 /******************************************************************
@@ -194,6 +204,7 @@ void EXTI0_IRQHandler(void)
             LCD_ShowString(260, 128, 200, 16, 16, "ing...");
         } else {
             LCD_ShowString(260, 128, 200, 16, 16, "stop");
+            SendUsartStatusMessage(IN pre, IN frequency, IN adcmax, IN adcmin, IN uint_voltage, IN fre);
         }
     }
     EXTI_ClearITPendingBit(EXTI_Line0); // 清除LINE0上的中断标志位
