@@ -226,9 +226,11 @@ void EXTI3_IRQHandler(void)
     }
     if (flag == 0) {
         BEEP_Short();
-
-        uint_voltage = uint_voltage + 10;
-        if (uint_voltage > 1000) { uint_voltage = 660; }
+        pre = pre + 1;
+        if (pre > 80) { pre = 100; }
+        TIM_PrescalerConfig(TIM2,pre,TIM_PSCReloadMode_Immediate);
+        // uint_voltage = uint_voltage + 10;
+        // if (uint_voltage > 1000) { uint_voltage = 660; }
     }
 
     EXTI_ClearITPendingBit(EXTI_Line3); // 清除LINE3上的中断标志位
@@ -250,8 +252,11 @@ void EXTI4_IRQHandler(void)
     }
     if (flag == 0) {
         BEEP_Short();
-        uint_voltage = uint_voltage - 10;
-        if (uint_voltage < 0) { uint_voltage = 660; }
+        pre = pre - 1;
+        if (pre < 5) { pre = 5; }
+        TIM_PrescalerConfig(TIM2,pre,TIM_PSCReloadMode_Immediate);
+        // uint_voltage = uint_voltage - 10;
+        // if (uint_voltage < 0) { uint_voltage = 660; }
     }
 
     EXTI_ClearITPendingBit(EXTI_Line4); // 清除LINE4上的中断标志位

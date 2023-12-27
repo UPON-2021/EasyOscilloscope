@@ -130,7 +130,7 @@ void SendUsartStatusMessage(IN u16 pre, IN u16 frequency, IN u32 adcmax, IN u32 
     Serial_Printf("\r\nuint_voltage  %d mv/div", uint_voltage);
     Serial_Printf("\r\nadcmax        %d mv", adcmax);
     Serial_Printf("\r\nadcmin        %d mv", adcmin);
-    Serial_Printf("\r\nadcmax-adcmin %d mv", adcmax - adcmin);
+    Serial_Printf("\r\nvpp %d mv", adcmax - adcmin);
     Serial_Printf("\r\nfrequency     %d Hz", frequency);
     Serial_Printf("\r\nOSR           %d Hz", fre);
     Serial_Printf("\r\n============END==================");
