@@ -77,8 +77,15 @@ void GetPowerMag(IN int long fftin[NPT], IN u16 pre, OUT int long fftout[NPT], O
 void fft2shift(IN int long fftout[NPT], OUT long fftshift[NPT])
 {
     u16 i;
+    u16 temp;
     for (i = 0; i < NPT; i++) {
-        fftshift[i] = (long)(log10(abs(fftout[i])) / LOG2 * 200);
+        // fftshift[i] = (long)(log10(abs(fftout[i])) / LOG2 * 200);
+        temp = (u16)sqrt(((fftout[i] << 16) >> 16) * ((fftout[i] << 16) >> 16) + ((fftout[i] >> 16)) * (fftout[i] >> 16))*6;
+        if (temp > 3000) {
+            fftshift[i] = (u16)(3000 + log2(temp));
+        }else{
+            fftshift[i] = temp;
+        }
     }
 }
 

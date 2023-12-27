@@ -104,7 +104,8 @@ int main()
         }
 
         CollectDataProcessor(IN adcx, OUT & adcmax, OUT & adcmin, OUT fftin,OUT &duty);
-        GetPowerMag(IN fftin, IN pre, OUT fftout, OUT & frequency);
+        // GetPowerMag(IN fftin, IN pre, OUT fftout, OUT & frequency);
+        GetPowerMag(IN adcx, IN pre, OUT fftout, OUT & frequency);
 
         if (show_flag == 1) {
             UpdateInformation(IN pre, IN uint_voltage, IN adcmax, IN adcmin, IN frequency, IN isDebug,IN duty);
@@ -253,7 +254,7 @@ void EXTI4_IRQHandler(void)
     if (flag == 0) {
         BEEP_Short();
         pre = pre - 1;
-        if (pre < 5) { pre = 5; }
+        if (pre < 1) { pre = 1; }
         TIM_PrescalerConfig(TIM2,pre,TIM_PSCReloadMode_Immediate);
         // uint_voltage = uint_voltage - 10;
         // if (uint_voltage < 0) { uint_voltage = 660; }
