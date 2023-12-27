@@ -57,7 +57,7 @@ u16 T        = 2000; // 定时器2重载值
 u16 pre      = 36;   // 定时器2预分频值
 u32 fre;             // 采样频率 kHz
 u8 duty = 0;        // 占空比
-u16 frequency;       // 波形频率
+u32 frequency;       // 波形频率
 uint16_t AD0, AD1;
 
 int uint_voltage = 660; // 纵坐标单位刻度 mv/div

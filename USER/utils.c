@@ -48,7 +48,7 @@ void CollectDataProcessor(IN u32 adcx[NPT], OUT u32 *adcmax, OUT u32 *adcmin, OU
 // OUT:fftout 输出的变换序列 frequency 最大的频率成分
 // 先将lBufOutArray分解成实部(X)和虚部(Y)，然后计算幅值(sqrt(X*X+Y*Y)
 //
-void GetPowerMag(IN int long fftin[NPT], IN u16 pre, OUT int long fftout[NPT], OUT u16 *frequency)
+void GetPowerMag(IN int long fftin[NPT], IN u16 pre, OUT int long fftout[NPT], OUT u32 *frequency)
 {
     float X, Y, Mag, magmax; // 实部，虚部，各频率幅值，最大幅值
     u16 i, temp;
